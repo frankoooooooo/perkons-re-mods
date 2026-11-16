@@ -258,6 +258,17 @@ class TestMicrotiming(unittest.TestCase):
         self.assertEqual(r.delay(7), 34)            # 8 ticks: a division before it
         self.assertEqual(r.row()[10:13], [0, 0, 0])
 
+    def test_a_delay_past_the_range_shows_at_its_end(self):
+        """99 % (an unquantized hit) is nearer 6 divisions than 5: the bright LED stays on
+        the last of the range."""
+        r = Rig()
+        r.set_step(0, 4)
+        r.set_delay(4, 99)
+        r.held.add(4)
+        r.tempo_to(0.5 + 10 * DEG)
+        row = r.row()
+        self.assertEqual((row[9], row[10]), (0xff, 0))
+
 
 if __name__ == '__main__':
     unittest.main()
