@@ -1,0 +1,25 @@
+{
+  "options": [
+    {
+      "id": "microtiming",
+      "title": "MICROTIMING (BETA)",
+      "summary": "UNTESTED BETA. HOLD A STEP AND TURN TEMPO TO PLAY IT EARLY OR LATE, IN SIXTHS OF A STEP. SWITCHED ON IN THE CONFIG MENU, ROW 3 STEP 12.",
+      "patches": [
+        "microtiming"
+      ],
+      "code": "mt",
+      "controls": [
+        {
+          "combo": "ROW 3 STEP 12",
+          "page": "CONFIG",
+          "does": "TURNS MICROTIMING ON OR OFF"
+        },
+        {
+          "combo": "STEP + TEMPO",
+          "page": "MAIN",
+          "does": "HOLD A STEP, TURN TEMPO: PLAYS THE STEP EARLY OR LATE"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+ "format": 1,
+ "repo": "frankoooooooo/perkons-re-mods",
+ "description": "Sequencer mods for the Perkons HD-01 (untested betas)",
+ "mods": [
+  {
+   "id": "microtiming",
+   "dir": "microtiming",
+   "title": "MICROTIMING (BETA)",
+   "summary": "UNTESTED BETA. HOLD A STEP AND TURN TEMPO TO PLAY IT EARLY OR LATE, IN SIXTHS OF A STEP. SWITCHED ON IN THE CONFIG MENU, ROW 3 STEP 12.",
+   "readme": "microtiming/README.md",
+   "patches": [
+    "microtiming"
+   ],
+   "code": "mt",
+   "kind": "mod",
+   "requires": [],
+   "conflicts": [],
+   "target": "1.3.0",
+   "controls": [
+    {
+     "combo": "ROW 3 STEP 12",
+     "page": "CONFIG",
+     "does": "TURNS MICROTIMING ON OR OFF"
+    },
+    {
+     "combo": "STEP + TEMPO",
+     "page": "MAIN",
+     "does": "HOLD A STEP, TURN TEMPO: PLAYS THE STEP EARLY OR LATE"
+    }
+   ],
+   "memory": {
+    "v1.3.0": {
+     "ram": {
+      "store": {
+       "frankoooooooo/perkons-re-mods:microtiming/src/m4/microtiming.c:.pk_axi": 8
+      }
+     },
+     "takeovers": {},
+     "borrows": {}
+    }
+   }
+  }
+ ]
+}

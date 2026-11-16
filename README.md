@@ -1,0 +1,9 @@
+# perkons-re-mods (frankoooooooo)
+
+Sequencer mods for the Erica Synths Pērkons HD-01, built with [perkons-re](https://github.com/kiteless/perkons-re). They are unofficial, and not affiliated with Erica Synths.
+
+| mod | status | |
+|---|---|---|
+| [microtiming](microtiming) | **untested beta** | Hold a step and turn TEMPO to play it up to 5/6 of a step early or late |
+
+No firmware files are included here. You build your own image from the official firmware with the Mod Matrix. Modified firmware is used at your own risk.
