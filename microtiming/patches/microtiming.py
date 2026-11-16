@@ -19,3 +19,4 @@ def apply(p, arg=None):
     h.toggle(KEY, 'microtiming', 'pk_cfg_microtiming')
     h.redirect_call('mt.tempo.08103bd6', 'pk_mt_tempo', 'TEMPO with one step held: that step\'s timing')
     h.replace_word('mt.page0_render.0812bf68', 'pk_mt_render', 'main page LEDs: the division view')
+    h.replace_word('keys.handler_lit', 'pk_mt_key_event', 'key events: a step turned off loses its microtiming')

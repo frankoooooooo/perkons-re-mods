@@ -20,6 +20,8 @@ TEMPO = 0x20
 DEG = 1 / 300
 TEMPO_BPM = SYM.g['tempo_state']
 TEMPO_CATCH = SYM.g['tempo_state'] + 0xd
+PASS = 24 * 12 * 16            # sub-ticks in a 16-step pass: 24 ticks x 12 sub-ticks a step
+DELAY = {0: 0, 1: 17, 2: 34, 3: 50, 4: 67, 5: 84}   # divisions -> the step's delay
 _image = []
 
 
@@ -56,6 +58,21 @@ class Rig(M4Rig):
 
     def delay(self, step, track=0):
         return struct.unpack('<h', bytes(self.e.uc.mem_read(self.block(track) + 8 * step + 2, 2)))[0]
+
+    def set_delay(self, step, d, track=0):
+        self.e.uc.mem_write(self.block(track) + 8 * step + 2, struct.pack('<h', d))
+
+    def on(self, step, track=0):
+        return self.e.r8(self.block(track) + 8 * step)
+
+    def passes(self, n=2):
+        """Play a warm-up pass, then n more: what track 1 fired in those."""
+        self.play()
+        for i in range(PASS * (n + 1)):
+            if i == PASS:
+                self.fired.clear()
+            self.tick()
+        return self.fired
 
     def row(self, track=0):
         return [self.leds.get(16 * track + c) for c in range(16)]
@@ -127,7 +144,7 @@ class TestMicrotiming(unittest.TestCase):
         r.held.add(0x17)
         r.ui()
         self.assertEqual(r.row(1)[9], 0)            # view not up before TEMPO moves: stock row
-        r.tempo_to(r.knob_at(TEMPO) + 3 * DEG)      # past the noise, inside the dead zone
+        r.tempo_to(r.knob_at(TEMPO) + 10 * DEG)     # past the noise, inside the dead zone
         self.assertEqual((r.delay(7, 1), r.row(1)[9], r.row(1)[7]), (34, 0xff, 0x08))
 
     def test_off_in_the_config_menu_is_stock(self):
@@ -174,6 +191,72 @@ class TestMicrotiming(unittest.TestCase):
             r.tick()
         self.assertEqual(r.fired[-2:], [(4, 8), (8, 20)])     # 8's trigger lands 20 ticks into step 7
         self.assertEqual(r.fired.count((8, 20)), 2)           # once a pass
+
+    def test_every_division_plays_at_its_tick(self):
+        for div in range(-5, 6):
+            with self.subTest(div=div):
+                r = Rig()
+                r.set_step(0, 8)
+                r.set_delay(8, DELAY[abs(div)] * (1 if div >= 0 else -1))
+                # early: the tick of the step before, counted once the track is on step 9
+                self.assertEqual(r.passes(), [(8, (24 + 4 * div) % 24)] * 2)
+
+    def test_an_early_first_step_wraps_to_the_end_of_the_pass(self):
+        r = Rig()
+        r.set_step(0, 0)
+        r.set_delay(0, -50)
+        self.assertEqual(r.passes(), [(0, 12)] * 2)
+
+    def test_an_empty_step_takes_no_microtiming(self):
+        r = Rig()
+        bpm = r.bpm()
+        r.held.add(4)
+        r.tempo_to(0.9)
+        self.assertEqual(r.delay(4), 0)
+        self.assertNotEqual(r.bpm(), bpm)            # TEMPO is the tempo knob, as stock
+
+    def test_a_step_turned_off_goes_back_to_the_shuffle_grid(self):
+        for step, shuffle, want in ((4, 0, 0), (5, 0, 0), (4, 30, 0), (5, 30, 30)):
+            with self.subTest(step=step, shuffle=shuffle):
+                r = Rig()
+                r.e.w8(r.block(0) + 0x87, shuffle)
+                r.set_step(0, step)
+                r.set_delay(step, -67)
+                r.press(step)                       # a tap: off
+                self.assertEqual((r.on(step), r.delay(step)), (0, want))
+                r.press(step)                       # on again: where shuffle has it
+                self.assertEqual((r.on(step), r.delay(step)), (1, want))
+
+    def test_a_step_stops_short_of_its_neighbours(self):
+        """Step 8 late, step 9 held and turned all the way early: it stops a division after
+        step 8, the view shows only what it can take, and both steps play."""
+        for late in range(6):
+            with self.subTest(late=late):
+                r = Rig()
+                r.set_step(0, 7)
+                r.set_step(0, 8)
+                r.set_delay(7, DELAY[late])
+                r.held.add(8)
+                r.tempo_to(0.05)
+                lo = late - 5                       # 4 ticks after step 8's hit
+                self.assertEqual(r.delay(8), -DELAY[-lo])
+                row = r.row()
+                self.assertEqual(row[(8 + lo) & 15], 0xff)
+                self.assertEqual([row[(8 + i) & 15] for i in range(-5, lo)], [0] * (5 + lo))
+                self.assertEqual([row[8 + i] for i in range(lo + 1, 6)], [0x08] * (5 - lo))
+                r.held.discard(8)
+                r.ui()
+                self.assertEqual(r.passes(1), [(7, 4 * late), (8, (4 * late + 4) % 24)])
+
+    def test_a_step_stops_short_of_the_next_one(self):
+        r = Rig()
+        r.set_step(0, 7)
+        r.set_step(0, 8)
+        r.set_delay(8, -50)                         # 12 ticks into step 8
+        r.held.add(7)
+        r.tempo_to(0.95)
+        self.assertEqual(r.delay(7), 34)            # 8 ticks: a division before it
+        self.assertEqual(r.row()[10:13], [0, 0, 0])
 
 
 if __name__ == '__main__':
