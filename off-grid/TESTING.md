@@ -1,6 +1,6 @@
 # Off-grid: hardware test plan
 
-Results so far: TEMPO editing tests 1–13 **passed** on a Pērkons (as the microtiming mod, before it became off-grid). Recording tests R1–R11 and the worst cases 14–29 are **not run yet**. Tests 1–13 should be repeated once on the off-grid build.
+Results: the full plan **passed** on a Pērkons with the off-grid build (17 Nov 2026). TEMPO editing tests 1–13 had also passed earlier as the microtiming mod.
 
 One bug was found on the unit and fixed: with TEMPO fully up when a step was held, the step couldn't be moved later. Turning past the end of the range now doesn't count, so turning back moves the step again at once. Retested on the unit after the fix.
 
@@ -37,38 +37,38 @@ Turn off-grid recording on (config row 3 step 13). Use a slow tempo (60–80 BPM
 
 | # | Test | Do | Expect | Result |
 |---|---|---|---|---|
-| R1 | Toggle, saved | Press row 3 step 13, power cycle | The LED is still lit | |
-| R2 | Carry-over | On a card where UNQUANTIZED was on, flash off-grid | Row 3 step 13 is already lit | |
-| R3 | Late hit | REC, play track 1's trigger key a little after a beat | Plays back a little after that beat, every time round. The step it lands on is the beat's step | |
-| R4 | Early hit | REC, play a little before a beat | Plays back a little before that beat. It lands on the beat's step, not the one before | |
-| R5 | No double | Watch R3 and R4 on the pass you record | You hear your hit once, not again from the sequencer on that pass | |
-| R6 | Last to first | Play just before the bar line | Lands on step 1, early, and plays just before the bar line | |
-| R7 | View | Hold a recorded early step and nudge TEMPO (TEMPO editing on) | The bright LED is to the left of the step | |
-| R8 | MIDI | Record from MIDI notes, early and late, single and multi channel | As R3 and R4. Velocity kept with MIDI velocity on, notes kept in multi channel | |
-| R9 | Off is stock | Recording toggle off, record early and late | Hits snap to the nearest step, on the grid | |
-| R10 | Old recordings | Load a pattern recorded with UNQUANTIZED | Plays as before | |
-| R11 | Overdub next to off-grid steps | Record early hits, then on the next passes record more hits just before and after them, and next to steps moved with TEMPO | Every hit plays where you played it. No hit lands a step late or goes missing, and steps you didn't record stay empty | |
+| R1 | Toggle, saved | Press row 3 step 13, power cycle | The LED is still lit | pass |
+| R2 | Carry-over | On a card where UNQUANTIZED was on, flash off-grid | Row 3 step 13 is already lit | pass |
+| R3 | Late hit | REC, play track 1's trigger key a little after a beat | Plays back a little after that beat, every time round. The step it lands on is the beat's step | pass |
+| R4 | Early hit | REC, play a little before a beat | Plays back a little before that beat. It lands on the beat's step, not the one before | pass |
+| R5 | No double | Watch R3 and R4 on the pass you record | You hear your hit once, not again from the sequencer on that pass | pass |
+| R6 | Last to first | Play just before the bar line | Lands on step 1, early, and plays just before the bar line | pass |
+| R7 | View | Hold a recorded early step and nudge TEMPO (TEMPO editing on) | The bright LED is to the left of the step | pass |
+| R8 | MIDI | Record from MIDI notes, early and late, single and multi channel | As R3 and R4. Velocity kept with MIDI velocity on, notes kept in multi channel | pass |
+| R9 | Off is stock | Recording toggle off, record early and late | Hits snap to the nearest step, on the grid | pass |
+| R10 | Old recordings | Load a pattern recorded with UNQUANTIZED | Plays as before | pass |
+| R11 | Overdub next to off-grid steps | Record early hits, then on the next passes record more hits just before and after them, and next to steps moved with TEMPO | Every hit plays where you played it. No hit lands a step late or goes missing, and steps you didn't record stay empty | pass |
 
 ## Worst cases
 
 | # | Test | Do | Expect | Result |
 |---|---|---|---|---|
-| 14 | Knob noise | Hold a step for 10 s without touching TEMPO, and again while turning another knob for a p-lock | The view never opens by itself | |
-| 15 | Knob travel | Turn through 5 divisions | About 70° of turn. If it's much wider or narrower, `DEG` in `src/m4/tempo_edit.c` needs changing | |
-| 16 | Edge of the knob | TEMPO fully up, hold a step, turn down past −5, then back up | The step moves later as soon as you turn back up (the bug fixed above) | |
-| 17 | Quick flick | Hold a step well under a second while flicking TEMPO | Note whether the step turns off on release. Stock treats holds under about a third of a second as a tap | |
-| 18 | Neighbour limit | Steps on 7 and 8. Shift 7 to +5, then hold 8 and turn fully counter-clockwise | No dim LEDs left of step 8. Both hits sound | |
-| 19 | First step early | Shift step 1 to −3 | Sounds just before the bar line every time round, but silent the very first time after PLAY | |
-| 20 | Rotate and copy | With a shifted step, rotate the track (TRACK ROTATE on in the config) and copy the pattern | The shift moves with the step | |
-| 21 | Shuffle | Set shuffle on a track with shifted steps. Then shift one step, tap it off and on | Shuffle replaces the shifts. The re-entered step is back on the shuffle grid | |
-| 22 | Play modes and rate | A shifted step with the track in reverse and random, and with the rate on divide and multiply | No missing or doubled hits. In reverse, two neighbours moved onto each other play as one (known) | |
-| 23 | Fast and slow tempo | Repeat test 6 at the lowest and highest tempo | No hits drop out | |
-| 24 | Pattern switch | Queue a pattern whose step 1 is shifted early while another plays | No missing or extra hit at the switch | |
-| 25 | External clock and MIDI | Run from MIDI clock, and from analog clock at 1 PPQN. With MIDI SEQ OUT on, watch the notes | Shifts sound the same. MIDI notes shift with the audio | |
-| 26 | Other mods | Rebuild with your usual mods ticked too and repeat tests 3 to 9, and R3 | All pass | |
-| 27 | Official firmware | Flash the official image and load the same pattern | Shifted steps play the same way | |
-| 28 | Recording and editing | Record a hit, then hold its step and move it with TEMPO | It moves from where it was recorded (rounded to a sixth) | |
-| 29 | Recording at fast tempo | Record early and late hits at the highest tempo | No doubled or missing hits | |
+| 14 | Knob noise | Hold a step for 10 s without touching TEMPO, and again while turning another knob for a p-lock | The view never opens by itself | pass |
+| 15 | Knob travel | Turn through 5 divisions | About 70° of turn. If it's much wider or narrower, `DEG` in `src/m4/tempo_edit.c` needs changing | pass |
+| 16 | Edge of the knob | TEMPO fully up, hold a step, turn down past −5, then back up | The step moves later as soon as you turn back up (the bug fixed above) | pass |
+| 17 | Quick flick | Hold a step well under a second while flicking TEMPO | Note whether the step turns off on release. Stock treats holds under about a third of a second as a tap | pass |
+| 18 | Neighbour limit | Steps on 7 and 8. Shift 7 to +5, then hold 8 and turn fully counter-clockwise | No dim LEDs left of step 8. Both hits sound | pass |
+| 19 | First step early | Shift step 1 to −3 | Sounds just before the bar line every time round, but silent the very first time after PLAY | pass |
+| 20 | Rotate and copy | With a shifted step, rotate the track (TRACK ROTATE on in the config) and copy the pattern | The shift moves with the step | pass |
+| 21 | Shuffle | Set shuffle on a track with shifted steps. Then shift one step, tap it off and on | Shuffle replaces the shifts. The re-entered step is back on the shuffle grid | pass |
+| 22 | Play modes and rate | A shifted step with the track in reverse and random, and with the rate on divide and multiply | No missing or doubled hits. In reverse, two neighbours moved onto each other play as one (known) | pass |
+| 23 | Fast and slow tempo | Repeat test 6 at the lowest and highest tempo | No hits drop out | pass |
+| 24 | Pattern switch | Queue a pattern whose step 1 is shifted early while another plays | No missing or extra hit at the switch | pass |
+| 25 | External clock and MIDI | Run from MIDI clock, and from analog clock at 1 PPQN. With MIDI SEQ OUT on, watch the notes | Shifts sound the same. MIDI notes shift with the audio | pass |
+| 26 | Other mods | Rebuild with your usual mods ticked too and repeat tests 3 to 9, and R3 | All pass | pass |
+| 27 | Official firmware | Flash the official image and load the same pattern | Shifted steps play the same way | pass |
+| 28 | Recording and editing | Record a hit, then hold its step and move it with TEMPO | It moves from where it was recorded (rounded to a sixth) | pass |
+| 29 | Recording at fast tempo | Record early and late hits at the highest tempo | No doubled or missing hits | pass |
 
 ## Reporting a failure
 

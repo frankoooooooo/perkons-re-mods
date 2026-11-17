@@ -7,7 +7,7 @@ Play steps off the grid, early or late:
 
 Off-grid replaces **UNQUANTIZED** (seq-unquantized), and its recording is based on that mod. It uses the same config key, and keeps UNQUANTIZED's setting.
 
-> **Beta.** TEMPO editing passed its tests on a Pērkons. Recording, as changed here, has only been tested in the perkons-re emulator so far. See [TESTING.md](TESTING.md). If it misbehaves, flash the official firmware to go back.
+> **Tested on hardware.** Recording and TEMPO editing passed the hardware test plan on a Pērkons. See [TESTING.md](TESTING.md). If it misbehaves, flash the official firmware to go back.
 
 Based on official Pērkons firmware **1.3.0**. Unofficial, and not affiliated with Erica Synths.
 
