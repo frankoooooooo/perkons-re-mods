@@ -47,6 +47,7 @@ Turn off-grid recording on (config row 3 step 13). Use a slow tempo (60–80 BPM
 | R8 | MIDI | Record from MIDI notes, early and late, single and multi channel | As R3 and R4. Velocity kept with MIDI velocity on, notes kept in multi channel | |
 | R9 | Off is stock | Recording toggle off, record early and late | Hits snap to the nearest step, on the grid | |
 | R10 | Old recordings | Load a pattern recorded with UNQUANTIZED | Plays as before | |
+| R11 | Overdub next to off-grid steps | Record early hits, then on the next passes record more hits just before and after them, and next to steps moved with TEMPO | Every hit plays where you played it. No hit lands a step late or goes missing, and steps you didn't record stay empty | |
 
 ## Worst cases
 

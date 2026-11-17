@@ -36,7 +36,8 @@ Record as usual: press **REC** while the pattern plays, and tap the **trigger ke
 * So a hit played a little ahead of the beat stays on its beat, early, rather than going on the step before.
 * It plays back at that moment every time round. The hit you played has already sounded, so the step doesn't play again on the pass you recorded it.
 * The timing is kept as a share of a step (24 positions per step, as fine as 96 PPQN), so it follows tempo changes, an external clock and each track's DIVIDE / MULTIPLY.
-* A step holds one hit per track: a second hit on the same step replaces the first.
+* A step holds one hit per track: a second hit on the same step replaces the first. A hit played before a late step's own hit comes goes in that step too, replacing it, so two hits never swap places.
+* Next to a step that's already early, a hit played in the gap before it goes in that step, early.
 * MIDI notes keep their velocity (with MIDI velocity on in the config menu) and, in multi channel mode, their note, as when recording on the grid.
 * Steps you program with the step buttons stay on the grid until you move them with TEMPO.
 

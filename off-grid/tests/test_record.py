@@ -35,12 +35,12 @@ def image():
     return _image[0]
 
 
-def placed(step, tick, next_step=None):
+def placed(step, tick):
     """Where a hit at `tick` of `step` goes, and its delay: this step late in its first part
     (stock's choice: sub-tick < 12, ticks 0-10), else the next step early."""
     if tick <= 10:
         return step, math.ceil(100 * tick / STEP_TICKS)
-    return (step + 1) % 16 if next_step is None else next_step, -math.ceil(100 * (STEP_TICKS - tick) / STEP_TICKS)
+    return (step + 1) % 16, -math.ceil(100 * (STEP_TICKS - tick) / STEP_TICKS)
 
 
 class Rig(M4Rig):
@@ -108,6 +108,9 @@ class Rig(M4Rig):
 
     def step_note(self, step, track=0):
         return self.e.r8(self.block(track) + 8 * step + 6)
+
+    def set_delay(self, step, d, track=0):
+        self.e.uc.mem_write(self.block(track) + 8 * step + 2, struct.pack('<h', d))
 
     def ons(self, track=0):
         return [s for s in range(16) if self.step_rec(s, track)['on']]
@@ -258,7 +261,79 @@ class TestRecord(unittest.TestCase):
         self.assertEqual(r.ons(), [])
 
 
-class TestMidi(unittest.TestCase):
+class TestNextToOffGridSteps(unittest.TestCase):
+    """Recording next to steps already off the grid (moved with TEMPO, or recorded early or
+    late): every hit plays at the tick it was played, and nothing is left on an off step."""
+
+    def test_a_late_step_not_played_yet_is_replaced(self):
+        """Step 5 is 20 ticks late; a hit at tick 15 goes in step 5 (its hit hadn't come yet),
+        not early in step 6, where it would cross step 5 and one of them would be lost."""
+        r = Rig()
+        r.set_step(0, 5)
+        r.set_delay(5, 84)
+        r.start()
+        r.rec()
+        r.to(5, 15)
+        r.hit()
+        self.assertEqual((r.ons(), r.step_rec(5)['delay'], r.step_rec(6)['delay']), ([5], 63, 0))
+        self.assertEqual(r.a_pass(), [(5, 15)])
+
+    def test_while_the_next_step_has_started_early(self):
+        """Step 6 is 20 ticks early, so the track is on step 6 from tick 4 of step 5: hits
+        then go in step 6, early by what's left of step 5."""
+        for tick, delay in ((8, -67), (15, -38)):
+            with self.subTest(tick=tick):
+                r = Rig()
+                r.set_step(0, 6)
+                r.set_delay(6, -84)
+                r.start()
+                r.rec()
+                r.to(6, tick)             # step 6 playing early, `tick` ticks into step 5's time
+                r.hit()
+                self.assertEqual((r.ons(), r.step_rec(6)['delay'], r.step_rec(7)['delay']), ([6], delay, 0))
+                self.assertEqual(r.a_pass(), [(6, tick)])
+
+    def test_midi_while_the_next_step_has_started_early(self):
+        r = Rig()
+        r.set_step(0, 6)
+        r.set_delay(6, -84)
+        r.start()
+        r.rec()
+        r.to(6, 15)
+        r.note(36)
+        self.assertEqual((r.ons(), r.step_rec(6)['delay'], r.step_rec(7)), ([6], -38, {'on': 0, 'delay': 0, 'vel': 0}))
+        self.assertEqual(r.a_pass(), [(6, 15)])
+
+    def test_overdub_next_to_recorded_early_hits(self):
+        """Early hits, then hits just after the same beats: each beat's later hit replaces its
+        early one (one hit per step), plays where it was played, and the steps before stay
+        empty."""
+        r = Rig()
+        r.start()
+        r.rec()
+        for step in (4, 8, 12):
+            r.to(step - 1, 20)            # 4 ticks before each
+            r.hit()
+        for step in (4, 8, 12):
+            r.to(step, 2)                 # then 2 ticks after each beat
+            r.hit()
+        self.assertEqual(r.ons(), [4, 8, 12])   # one hit per step: the later ones replace them
+        self.assertEqual([r.step_rec(s)['delay'] for s in (3, 7, 11)], [0, 0, 0])
+        self.assertEqual(r.a_pass(), [(4, 2), (8, 2), (12, 2)])
+
+
+class TestMidiSameHit(unittest.TestCase):
+    def test_the_same_hit_again_still_gets_its_timing(self):
+        """Stock rewrites a step as it was (same note, same velocity): the timing is set all
+        the same."""
+        r = Rig()
+        r.set_step(0, 5, velocity=0x7f)
+        r.start()
+        r.rec()
+        r.to(5, 7)
+        r.note(36)
+        self.assertEqual(r.step_rec(5), {'on': 1, 'delay': 30, 'vel': 0x7f})
+
     """MIDI notes record through the MIDI input's own path (single channel by default:
     notes 36-39 play voices 1-4)."""
 
