@@ -1,6 +1,6 @@
 # Off-grid: hardware test plan
 
-Results so far: TEMPO editing tests 1–13 **passed** on a Pērkons (as the microtiming mod, before it became off-grid). Recording tests R1–R10 and the worst cases 14–27 are **not run yet**. Tests 1–13 should be repeated once on the off-grid build.
+Results so far: TEMPO editing tests 1–13 **passed** on a Pērkons (as the microtiming mod, before it became off-grid). Recording tests R1–R11 and the worst cases 14–29 are **not run yet**. Tests 1–13 should be repeated once on the off-grid build.
 
 One bug was found on the unit and fixed: with TEMPO fully up when a step was held, the step couldn't be moved later. Turning past the end of the range now doesn't count, so turning back moves the step again at once. Retested on the unit after the fix.
 
