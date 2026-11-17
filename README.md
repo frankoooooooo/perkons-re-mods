@@ -4,7 +4,7 @@ Sequencer mods for the Erica Synths Pērkons HD-01, built with [perkons-re](http
 
 | mod | status | |
 |---|---|---|
-| [microtiming](microtiming) | **tested on hardware** ([results](microtiming/TESTING.md)) | Hold a step and turn TEMPO to play it up to 5/6 of a step early or late |
+| [off-grid](off-grid) | **beta**: TEMPO editing tested on hardware, recording emulator-only ([results](off-grid/TESTING.md)) | Record hits early or late as played, and hold a step + turn TEMPO to move it early or late. Replaces UNQUANTIZED |
 
 No firmware files are included here. You build your own image from the official firmware with the Mod Matrix. Modified firmware is used at your own risk.
 

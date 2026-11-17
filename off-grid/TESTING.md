@@ -1,14 +1,14 @@
-# Microtiming: hardware test plan
+# Off-grid: hardware test plan
 
-Results so far: tests 1–13 **passed** on a Pērkons. Tests 14–27 are **not run yet**.
+Results so far: TEMPO editing tests 1–13 **passed** on a Pērkons (as the microtiming mod, before it became off-grid). Recording tests R1–R10 and the worst cases 14–27 are **not run yet**. Tests 1–13 should be repeated once on the off-grid build.
 
 One bug was found on the unit and fixed: with TEMPO fully up when a step was held, the step couldn't be moved later. Turning past the end of the range now doesn't count, so turning back moves the step again at once. Retested on the unit after the fix.
 
 ## Before you start
 
-- Build the image in the Mod Matrix with only MICROTIMING ticked. Add other mods only in test 26.
+- Build the image in the Mod Matrix with only OFF-GRID ticked. Add other mods only in test 26.
 - Keep the official `perkons_v1.3.0-0-force.img` on your computer so you can flash back.
-- After flashing, check that `INFO.TXT` on the SD card shows a tag with `mt` in it.
+- After flashing, check that `INFO.TXT` on the SD card shows a tag with `og` in it.
 - Use a simple pattern: track 1 with steps on 1, 5, 9 and 13, and track 2 with the same steps as an unshifted reference. Pick short, clicky sounds so timing is easy to hear.
 
 ## Simple tests
@@ -29,6 +29,23 @@ One bug was found on the unit and fixed: with TEMPO fully up when a step was hel
 | 12 | Clear on turn-off | Shift a step, tap it off, tap it on | It plays on the grid again | pass |
 | 13 | Save and reload | Shift two steps, save, switch patterns and back, power cycle | The shifts are still there | pass |
 
+## Recording
+
+Turn off-grid recording on (config row 3 step 13). Use a slow tempo (60–80 BPM) so early and late are easy to hear, with a metronome-like part on track 2.
+
+| # | Test | Do | Expect | Result |
+|---|---|---|---|---|
+| R1 | Toggle, saved | Press row 3 step 13, power cycle | The LED is still lit | |
+| R2 | Carry-over | On a card where UNQUANTIZED was on, flash off-grid | Row 3 step 13 is already lit | |
+| R3 | Late hit | REC, play track 1's trigger key a little after a beat | Plays back a little after that beat, every time round. The step it lands on is the beat's step | |
+| R4 | Early hit | REC, play a little before a beat | Plays back a little before that beat. It lands on the beat's step, not the one before | |
+| R5 | No double | Watch R3 and R4 on the pass you record | You hear your hit once, not again from the sequencer on that pass | |
+| R6 | Last to first | Play just before the bar line | Lands on step 1, early, and plays just before the bar line | |
+| R7 | View | Hold a recorded early step and nudge TEMPO (TEMPO editing on) | The bright LED is to the left of the step | |
+| R8 | MIDI | Record from MIDI notes, early and late, single and multi channel | As R3 and R4. Velocity kept with MIDI velocity on, notes kept in multi channel | |
+| R9 | Off is stock | Recording toggle off, record early and late | Hits snap to the nearest step, on the grid | |
+| R10 | Old recordings | Load a pattern recorded with UNQUANTIZED | Plays as before | |
+
 ## Worst cases
 
 | # | Test | Do | Expect | Result |
@@ -45,8 +62,11 @@ One bug was found on the unit and fixed: with TEMPO fully up when a step was hel
 | 23 | Fast and slow tempo | Repeat test 6 at the lowest and highest tempo | No hits drop out | |
 | 24 | Pattern switch | Queue a pattern whose step 1 is shifted early while another plays | No missing or extra hit at the switch | |
 | 25 | External clock and MIDI | Run from MIDI clock, and from analog clock at 1 PPQN. With MIDI SEQ OUT on, watch the notes | Shifts sound the same. MIDI notes shift with the audio | |
-| 26 | Other mods | Rebuild with your usual mods ticked too and repeat tests 3 to 9. With UNQUANTIZED, record a hit and hold its step | All pass. The recorded hit's step shows a position in the view | |
+| 26 | Other mods | Rebuild with your usual mods ticked too and repeat tests 3 to 9, and R3 | All pass | |
 | 27 | Official firmware | Flash the official image and load the same pattern | Shifted steps play the same way | |
+
+| 28 | Recording and editing | Record a hit, then hold its step and move it with TEMPO | It moves from where it was recorded (rounded to a sixth) | |
+| 29 | Recording at fast tempo | Record early and late hits at the highest tempo | No doubled or missing hits | |
 
 ## Reporting a failure
 

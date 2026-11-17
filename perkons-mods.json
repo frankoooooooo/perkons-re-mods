@@ -1,27 +1,34 @@
 {
  "format": 1,
  "repo": "frankoooooooo/perkons-re-mods",
- "description": "Sequencer mods for the Perkons HD-01 (tested on hardware)",
+ "description": "Sequencer mods for the Perkons HD-01 (off-grid: beta)",
  "mods": [
   {
-   "id": "microtiming",
-   "dir": "microtiming",
-   "title": "MICROTIMING",
-   "summary": "TESTED ON HARDWARE. HOLD A STEP AND TURN TEMPO TO PLAY IT EARLY OR LATE, IN SIXTHS OF A STEP. SWITCHED ON IN THE CONFIG MENU, ROW 3 STEP 12.",
-   "readme": "microtiming/README.md",
+   "id": "off-grid",
+   "dir": "off-grid",
+   "title": "OFF-GRID",
+   "summary": "PLAY STEPS OFF THE GRID: THE TRIGGER KEYS AND MIDI NOTES RECORD YOUR HITS EARLY OR LATE, AS PLAYED (CONFIG ROW 3 STEP 13), AND HOLD A STEP + TURN TEMPO TO MOVE IT EARLY OR LATE (CONFIG ROW 3 STEP 12).",
+   "readme": "off-grid/README.md",
    "patches": [
-    "microtiming"
+    "off_grid"
    ],
-   "code": "mt",
+   "code": "og",
    "kind": "mod",
    "requires": [],
-   "conflicts": [],
+   "conflicts": [
+    "kiteless/perkons-re-mods:seq-unquantized"
+   ],
    "target": "1.3.0",
    "controls": [
     {
+     "combo": "ROW 3 STEP 13",
+     "page": "CONFIG",
+     "does": "TURNS OFF-GRID RECORDING ON OR OFF"
+    },
+    {
      "combo": "ROW 3 STEP 12",
      "page": "CONFIG",
-     "does": "TURNS MICROTIMING ON OR OFF"
+     "does": "TURNS TEMPO EDITING ON OR OFF"
     },
     {
      "combo": "STEP + TEMPO",
@@ -33,7 +40,8 @@
     "v1.3.0": {
      "ram": {
       "store": {
-       "frankoooooooo/perkons-re-mods:microtiming/src/m4/microtiming.c:.pk_axi": 16
+       "frankoooooooo/perkons-re-mods:off-grid/src/m4/record.c:.pk_axi": 4,
+       "frankoooooooo/perkons-re-mods:off-grid/src/m4/tempo_edit.c:.pk_axi": 16
       }
      },
      "takeovers": {},

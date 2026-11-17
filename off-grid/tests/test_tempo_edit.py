@@ -1,4 +1,4 @@
-"""microtiming: hold one step + TEMPO sets that step's timing; the tempo never changes."""
+"""off-grid TEMPO editing: hold one step + TEMPO sets that step's timing; the tempo never changes."""
 import os
 import struct
 import sys
@@ -6,7 +6,9 @@ import tempfile
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PERKONS = os.environ.get('PERKONS_RE', os.path.join(HERE, '..', '..', '..', 'perkons-re'))
+PERKONS = os.environ.get('PERKONS_RE') or next(
+    (p for p in (os.path.join(HERE, '..', '..', '..', d) for d in ('perkons', 'perkons-re'))
+     if os.path.isdir(p)), '')
 sys.path[:0] = [os.path.join(PERKONS, 'tools'), os.path.join(PERKONS, 'tests')]
 os.environ.setdefault('PERKONS_MODS', os.path.join(HERE, '..', '..'))
 
@@ -27,7 +29,7 @@ _image = []
 
 def image():
     if not _image:
-        img, p = build_patched(Image.load(require_image('v1.3.0')), ['microtiming'], tempfile.mkdtemp())
+        img, p = build_patched(Image.load(require_image('v1.3.0')), ['off_grid'], tempfile.mkdtemp())
         _image.append((img, p.cave_symbols['m4host']))
     return _image[0]
 

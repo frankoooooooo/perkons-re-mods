@@ -1,4 +1,4 @@
-/* microtiming: hold one step and turn TEMPO to play that step early or late.
+/* off-grid TEMPO editing: hold one step and turn TEMPO to play that step early or late.
  *
  * On (config row 3 step 12), in the main page, with exactly one step held:
  * - TEMPO no longer changes the tempo.
@@ -122,8 +122,8 @@ static int one_step_held(void)
 }
 
 /* ui_update: TEMPO's position and moved flag, into tempo_knob */
-void PK_NEXT(pk_mt_tempo)(float pos, int moved);
-void pk_mt_tempo(float pos, int moved)
+void PK_NEXT(pk_og_tempo)(float pos, int moved);
+void pk_og_tempo(float pos, int moved)
 {
     int key = one_step_held();
     if (key < 0) {
@@ -131,7 +131,7 @@ void pk_mt_tempo(float pos, int moved)
             fw_tempo_set(FW_F32(SYM_tempo_state + FW_TEMPO_BPM));
         held = -1;
         shown = 0;
-        PK_NEXT(pk_mt_tempo)(pos, moved);
+        PK_NEXT(pk_og_tempo)(pos, moved);
         return;
     }
     if (key != held) {
@@ -161,14 +161,14 @@ void pk_mt_tempo(float pos, int moved)
         if (n != delay_to_div(*step_delay(key)))    /* untouched steps keep shuffle's value */
             *step_delay(key) = (int16_t)div_to_delay(n);
     }
-    PK_NEXT(pk_mt_tempo)(pos, 0);               /* the tempo stays as it is */
+    PK_NEXT(pk_og_tempo)(pos, 0);               /* the tempo stays as it is */
 }
 
 /* main page LEDs: stock, then the held step's row as the division view */
-void PK_NEXT(pk_mt_render)(void);
-void pk_mt_render(void)
+void PK_NEXT(pk_og_render)(void);
+void pk_og_render(void)
 {
-    PK_NEXT(pk_mt_render)();
+    PK_NEXT(pk_og_render)();
     if (held < 0 || !shown || one_step_held() != held)
         return;
     int row = held & 0x30, col = held & 15;
@@ -185,11 +185,11 @@ void pk_mt_render(void)
 /* the global key handler (chained): a step that a step key left off goes back to the
  * track's shuffle grid (set_shuffle: odd steps the track's shuffle, even steps 0), so
  * microtiming doesn't outlive the step */
-int PK_NEXT(pk_mt_key_event)(const uint8_t *evt);
-int pk_mt_key_event(const uint8_t *evt)
+int PK_NEXT(pk_og_key_event)(const uint8_t *evt);
+int pk_og_key_event(const uint8_t *evt)
 {
     int key = evt[0];
-    int r = PK_NEXT(pk_mt_key_event)(evt);
+    int r = PK_NEXT(pk_og_key_event)(evt);
     if (pk_cfg_microtiming && key < 0x40 && !step_on(key))
         *step_delay(key) = key & 1 ? block(key)[FW_BLK_SHUFFLE] : 0;
     return r;
