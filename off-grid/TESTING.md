@@ -11,11 +11,13 @@ One bug was found on the unit and fixed: with TEMPO fully up when a step was hel
 - After flashing, check that `INFO.TXT` on the SD card shows a tag with `og` in it.
 - Use a simple pattern: track 1 with steps on 1, 5, 9 and 13, and track 2 with the same steps as an unshifted reference. Pick short, clicky sounds so timing is easy to hear.
 
-## Simple tests
+## TEMPO editing
+
+Turn TEMPO editing on (config row 3 step 12) for tests 3–13.
 
 | # | Test | Do | Expect | Result |
 |---|---|---|---|---|
-| 1 | Toggle off is stock | Leave the config toggle off, hold a step, turn TEMPO | Tempo changes as normal, no view | pass |
+| 1 | Toggle off is stock | Leave TEMPO editing (row 3 step 12) off, hold a step, turn TEMPO | Tempo changes as normal, no view | pass |
 | 2 | Toggle on, saved | SHIFT + MOD, press row 3 step 12, power cycle | The LED is still lit in the config menu | pass |
 | 3 | Tempo is frozen | Hold step 5 on track 1, turn TEMPO a long way | The tempo doesn't change | pass |
 | 4 | View opens | Same as 3 | Dim LEDs on five steps each side of step 5, one bright LED, the rest of the row dark. Other rows normal | pass |
@@ -51,7 +53,7 @@ Turn off-grid recording on (config row 3 step 13). Use a slow tempo (60–80 BPM
 | # | Test | Do | Expect | Result |
 |---|---|---|---|---|
 | 14 | Knob noise | Hold a step for 10 s without touching TEMPO, and again while turning another knob for a p-lock | The view never opens by itself | |
-| 15 | Knob travel | Turn through 5 divisions | About 70° of turn. If it's much wider or narrower, `DEG` in `src/m4/microtiming.c` needs changing | |
+| 15 | Knob travel | Turn through 5 divisions | About 70° of turn. If it's much wider or narrower, `DEG` in `src/m4/tempo_edit.c` needs changing | |
 | 16 | Edge of the knob | TEMPO fully up, hold a step, turn down past −5, then back up | The step moves later as soon as you turn back up (the bug fixed above) | |
 | 17 | Quick flick | Hold a step well under a second while flicking TEMPO | Note whether the step turns off on release. Stock treats holds under about a third of a second as a tap | |
 | 18 | Neighbour limit | Steps on 7 and 8. Shift 7 to +5, then hold 8 and turn fully counter-clockwise | No dim LEDs left of step 8. Both hits sound | |
@@ -64,7 +66,6 @@ Turn off-grid recording on (config row 3 step 13). Use a slow tempo (60–80 BPM
 | 25 | External clock and MIDI | Run from MIDI clock, and from analog clock at 1 PPQN. With MIDI SEQ OUT on, watch the notes | Shifts sound the same. MIDI notes shift with the audio | |
 | 26 | Other mods | Rebuild with your usual mods ticked too and repeat tests 3 to 9, and R3 | All pass | |
 | 27 | Official firmware | Flash the official image and load the same pattern | Shifted steps play the same way | |
-
 | 28 | Recording and editing | Record a hit, then hold its step and move it with TEMPO | It moves from where it was recorded (rounded to a sixth) | |
 | 29 | Recording at fast tempo | Record early and late hits at the highest tempo | No doubled or missing hits | |
 
