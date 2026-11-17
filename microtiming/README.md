@@ -2,13 +2,13 @@
 
 Hold a step and turn **TEMPO** to make that step play early or late, in sixths of a step.
 
-> **Untested beta.** This has only been run in the perkons-re emulator, not on a Pērkons. Expect rough edges. If it misbehaves, flash the official firmware to go back.
+> **Tested on hardware.** The core features passed on a Pērkons: switching it on, moving steps early and late, the LED view, the tempo staying put, and save/reload. Some worst cases (rotate and copy, play modes, external clock, other mods) aren't tested yet. See [TESTING.md](TESTING.md). If it misbehaves, flash the official firmware to go back.
 
 Based on official Pērkons firmware **1.3.0**. Unofficial, and not affiliated with Erica Synths.
 
 ## Getting it
 
-Build Pērkons firmware with **MICROTIMING (BETA)** ticked in the **Mod Matrix**, from your own official 1.3.0 firmware. Follow [Get modded firmware](https://github.com/kiteless/perkons-re#get-modded-firmware) in perkons-re, and tick this repo on the mod-repo screen once it's listed (or point `PERKONS_MODS` at a clone of it). No firmware files are provided here.
+Build Pērkons firmware with **MICROTIMING** ticked in the **Mod Matrix**, from your own official 1.3.0 firmware. Follow [Get modded firmware](https://github.com/kiteless/perkons-re#get-modded-firmware) in perkons-re, and tick this repo on the mod-repo screen once it's listed (or point `PERKONS_MODS` at a clone of it). No firmware files are provided here.
 
 ## Turning it on
 
