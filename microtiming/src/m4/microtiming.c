@@ -41,6 +41,18 @@ PK_AXI static int8_t held = -1;         /* the held step's key while TEMPO is ou
 PK_AXI static uint8_t shown;            /* TEMPO moved this hold: the view is up */
 PK_AXI static int8_t base;              /* the step's divisions when the hold began */
 PK_AXI static float anchor;             /* TEMPO's position when the hold began */
+PK_AXI static float last;               /* TEMPO's position at the last UI update */
+PK_AXI static float turned;             /* travel since the hold began, kept inside the range */
+
+/* the travel that puts the step k divisions from where the hold began: the middle of that
+ * division's 10 degrees (0: the hold's start) */
+static float travel(int k)
+{
+    if (k == 0)
+        return 0;
+    float t = DEAD + ((k < 0 ? -k : k) - 0.5f) * DIV;
+    return k < 0 ? -t : t;
+}
 
 /* divisions <-> the step's delay (% of a step). 24 ticks per step, so n divisions is 4n ticks:
  * the player's delay * 24 / 100 (truncated) lands on 4n for these percentages. */
@@ -125,16 +137,25 @@ void pk_mt_tempo(float pos, int moved)
     if (key != held) {
         held = (int8_t)key;
         shown = 0;
-        anchor = pos;
+        anchor = last = pos;
+        turned = 0;
         base = (int8_t)delay_to_div(*step_delay(key));
     }
-    float d = pos - anchor;
-    float a = d < 0 ? -d : d;
-    if (a >= NOISE)
+    float a = pos - anchor;
+    if (a >= NOISE || -a >= NOISE)
         shown = 1;
+    /* travel counts from the hold's start but stops at the range's ends, so turning past an
+     * end (or the pot's) and back moves the step again at once, wherever the pot started */
+    turned += pos - last;
+    last = pos;
     if (shown) {
         int lo, hi;
         limits(key, &lo, &hi);
+        float min = travel(clamp(base, lo, hi) > lo ? lo - base : 0);
+        float max = travel(clamp(base, lo, hi) < hi ? hi - base : 0);
+        turned = turned < min ? min : turned > max ? max : turned;
+        float d = turned;
+        a = d < 0 ? -d : d;
         int n = a < DEAD ? base : base + (d < 0 ? -1 : 1) * (1 + (int)((a - DEAD) / DIV));
         n = clamp(n, lo, hi);
         if (n != delay_to_div(*step_delay(key)))    /* untouched steps keep shuffle's value */

@@ -23,7 +23,7 @@ Build Pērkons firmware with **MICROTIMING (BETA)** ticked in the **Mod Matrix**
    * the 5 steps on each side of the held step light dim (unaccented), marking the range;
    * the step's current position lights bright;
    * the rest of that row goes dark. The other rows and playback carry on as normal.
-3. Nothing happens for the first **20°**. After that, each **10°** moves the step one sixth of a step (4 of its 24 ticks): clockwise is later, counter-clockwise is earlier. The limit is 5 sixths either way. Turning back into the first 20° returns the step to where it started.
+3. Nothing happens for the first **20°**. After that, each **10°** moves the step one sixth of a step (4 of its 24 ticks): clockwise is later, counter-clockwise is earlier. The limit is 5 sixths either way. Turning back into the first 20° returns the step to where it started. Turning past the end of the range doesn't count: turn back and the step moves again at once. So if TEMPO is at the end of its travel when you hold a step, turn it the other way first, then back.
 4. Let go of the step. To see or change its timing later, hold it again and move TEMPO slightly.
 
 A step can't be moved onto or past the step played before or after it. If a neighbouring step is in the way, the range in the view is shorter on that side and the step stops one division short of it. This limit applies in the forward play mode only. In the other play modes, two steps moved onto each other play as one hit.

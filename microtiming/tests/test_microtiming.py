@@ -269,6 +269,28 @@ class TestMicrotiming(unittest.TestCase):
         row = r.row()
         self.assertEqual((row[9], row[10]), (0xff, 0))
 
+    def test_tempo_at_the_top_can_still_move_the_step_later(self):
+        """Found on the unit: TEMPO fully up, hold a step: all the way down (-5), then back
+        up moves the step later from there, past its start."""
+        r = Rig()
+        r.knob(TEMPO, 1.0)
+        r.ui()
+        r.set_step(0, 4)
+        r.held.add(4)
+        r.tempo_to(0.0)
+        self.assertEqual(r.delay(4), -84)
+        r.tempo_to(100 * DEG)                       # 65 degrees back to the start, then 35 on
+        self.assertEqual(r.delay(4), 34)
+
+    def test_turning_past_the_end_and_back_moves_at_once(self):
+        r = Rig()
+        r.set_step(0, 4)
+        r.held.add(4)
+        r.tempo_to(0.5 + 100 * DEG)                 # +5, and 35 degrees past it
+        self.assertEqual(r.delay(4), 84)
+        r.tempo_to(0.5 + 90 * DEG)                  # 10 back: +4 at once
+        self.assertEqual(r.delay(4), 67)
+
 
 if __name__ == '__main__':
     unittest.main()
