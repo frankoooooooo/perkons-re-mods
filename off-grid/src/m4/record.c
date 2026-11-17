@@ -15,10 +15,16 @@
 #include "pk_host.h"
 #include "fw_m4_seq.h"
 
-#define seq_play_state      FW_CALL(SYM_seq_play_state, int (*)(void))     /* 1: playing */
-
-#define VS_STEP_STATE       0x28    /* u8: 0 the step's time is ahead, 1 it came, 2 the next step started early */
-#define DC_MIDI_VELOCITY    0x1b    /* device_config u8: midi-velocity on */
+/* fw_m4_seq.h has these from perkons-re 0c6e58e on; earlier checkouts get them here */
+#ifndef FW_VS_STEP_STATE
+#define FW_VS_STEP_STATE    0x28    /* u8: 0 the step's time is ahead, 1 it came, 2 the next step started early */
+#endif
+#ifndef FW_DC_VELOCITY
+#define FW_DC_VELOCITY      0x1b    /* MIDI velocity on */
+#endif
+#ifndef fw_seq_play_state
+#define fw_seq_play_state   FW_CALL(SYM_seq_play_state, int (*)(void))  /* 1: playing */
+#endif
 
 PK_AXI uint8_t pk_cfg_unquantized;          /* system/mods.json "unquantized" (seq-unquantized's) */
 PK_AXI static uint8_t played;               /* the trigger key being handled: row + 1, 0 none */
@@ -44,7 +50,7 @@ static int place(uint8_t *vs, int *delay)
         return -1;
     if (tick >= per)
         tick = per - 1;
-    uint8_t state = FW_U8(vs + VS_STEP_STATE);
+    uint8_t state = FW_U8(vs + FW_VS_STEP_STATE);
     int late = state == 0 || (state == 1 && FW_U16(vs + FW_VS_SUBTICK) < per / 2);
     int at = late || state == 2 ? step : next;
     if (at < 0 || at >= FW_STEPS)
@@ -110,7 +116,7 @@ void pk_og_midi_note(uint32_t ch, uint32_t note, uint32_t vel)
     for (int t = 0; track < 0 && t < 4; t++)
         if (FW_U8(SYM_device_config + FW_DC_TRIG_NOTE + t) == note)
             track = t;
-    uint8_t *vs = track >= 0 && recording() && seq_play_state() == 1 ? fw_voice_state(track) : 0;
+    uint8_t *vs = track >= 0 && recording() && fw_seq_play_state() == 1 ? fw_voice_state(track) : 0;
     int delay, at = vs ? place(vs, &delay) : -1;
     if (at < 0) {
         PK_NEXT(pk_og_midi_note)(ch, note, vel);
@@ -140,5 +146,5 @@ void pk_og_midi_note(uint32_t ch, uint32_t note, uint32_t vel)
         return;
     }
     /* stock rewrote a step as it was (the same hit again): the note's velocity as stock gives it */
-    write_hit(vs, at, delay, ch < 4 ? (int)note : -1, FW_U8(SYM_device_config + DC_MIDI_VELOCITY) ? (int)vel : 0x7f);
+    write_hit(vs, at, delay, ch < 4 ? (int)note : -1, FW_U8(SYM_device_config + FW_DC_VELOCITY) ? (int)vel : 0x7f);
 }
