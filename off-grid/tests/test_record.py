@@ -1,5 +1,5 @@
 """off-grid recording: the trigger keys and MIDI notes record on the nearest step, early or
-late, as played (based on seq-unquantized's tests)."""
+late, as played."""
 import math
 import os
 import struct
@@ -48,7 +48,7 @@ class Rig(M4Rig):
 
     def __init__(self, on=True):
         super().__init__(*image())
-        self.e.w8(self.cave['pk_cfg_unquantized'], 1 if on else 0)
+        self.e.w8(self.cave['pk_cfg_off_grid'], 1 if on else 0)
         self.sub = 0
         self.fired = []           # (step, tick) of each trigger the sequencer sent for track 1
         # the MIDI input as the firmware sets it up at init: channels and callbacks
@@ -143,11 +143,11 @@ class TestRecord(unittest.TestCase):
             r.e.call(r.cave['pk4_cfg_render'], 0, 0, 0, 0, max_insns=5_000_000)
             return r.leds.get(key)
 
-        self.assertEqual((r.e.r8(r.cave['pk_cfg_unquantized']), led()), (0, 0))
+        self.assertEqual((r.e.r8(r.cave['pk_cfg_off_grid']), led()), (0, 0))
         press()
-        self.assertEqual((r.e.r8(r.cave['pk_cfg_unquantized']), led()), (1, 0x80))
+        self.assertEqual((r.e.r8(r.cave['pk_cfg_off_grid']), led()), (1, 0x80))
         press()
-        self.assertEqual((r.e.r8(r.cave['pk_cfg_unquantized']), led()), (0, 0))
+        self.assertEqual((r.e.r8(r.cave['pk_cfg_off_grid']), led()), (0, 0))
 
     def test_early_in_a_step_records_it_late(self):
         r = Rig()

@@ -1,5 +1,5 @@
 /* off-grid recording: the trigger keys and MIDI notes record where they were played, on the
- * nearest step, early or late. Based on seq-unquantized (kiteless/perkons-re-mods, MIT).
+ * nearest step, early or late.
  *
  * On (config row 3 step 13), while playing with REC on, a hit goes in a step with the delay
  * (the signed % of a step it plays off the grid, the value shuffle sets) that plays it at
@@ -26,12 +26,12 @@
 #define fw_seq_play_state   FW_CALL(SYM_seq_play_state, int (*)(void))  /* 1: playing */
 #endif
 
-PK_AXI uint8_t pk_cfg_unquantized;          /* system/mods.json "unquantized" (seq-unquantized's) */
+PK_AXI uint8_t pk_cfg_off_grid;            /* system/mods.json "off-grid" */
 PK_AXI static uint8_t played;               /* the trigger key being handled: row + 1, 0 none */
 
 static int recording(void)
 {
-    return pk_cfg_unquantized && FW_U8(SYM_rec_flags + FW_REC_ON);
+    return pk_cfg_off_grid && FW_U8(SYM_rec_flags + FW_REC_ON);
 }
 
 static uint8_t *step_rec(uint8_t *vs, int step)

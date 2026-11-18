@@ -4,7 +4,7 @@ Sequencer mods for the Erica Synths Pērkons HD-01, built with [perkons-re](http
 
 | mod | status | |
 |---|---|---|
-| [off-grid](off-grid) | **tested on hardware** ([results](off-grid/TESTING.md)) | Record hits early or late as played, and hold a step + turn TEMPO to move it early or late. Replaces UNQUANTIZED |
+| [off-grid](off-grid) | **tested on hardware** ([results](off-grid/TESTING.md)) | Record hits early or late as played, and hold a step + turn TEMPO to move it early or late. Merged into [kiteless/perkons-re-mods](https://github.com/kiteless/perkons-re-mods/tree/main/off-grid) |
 
 No firmware files are included here. You build your own image from the official firmware with the Mod Matrix. Modified firmware is used at your own risk.
 

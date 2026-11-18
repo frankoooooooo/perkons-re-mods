@@ -79,7 +79,7 @@ class Rig(M4Rig):
     def row(self, track=0):
         return [self.leds.get(16 * track + c) for c in range(16)]
 
-    # the sequencer, one sub-tick at a time (as seq-unquantized's test)
+    # the sequencer, one sub-tick at a time
     def tick(self):
         c = self.clock
         n = self.r16(c + 0x1c) * self.r16(c + 0x1e)
@@ -261,7 +261,7 @@ class TestMicrotiming(unittest.TestCase):
         self.assertEqual(r.row()[10:13], [0, 0, 0])
 
     def test_a_delay_past_the_range_shows_at_its_end(self):
-        """99 % (an unquantized hit) is nearer 6 divisions than 5: the bright LED stays on
+        """99 % (a hit recorded late) is nearer 6 divisions than 5: the bright LED stays on
         the last of the range."""
         r = Rig()
         r.set_step(0, 4)

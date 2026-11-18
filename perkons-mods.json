@@ -15,9 +15,7 @@
    "code": "og",
    "kind": "mod",
    "requires": [],
-   "conflicts": [
-    "kiteless/perkons-re-mods:seq-unquantized"
-   ],
+   "conflicts": [],
    "target": "1.3.0",
    "controls": [
     {

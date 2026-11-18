@@ -5,8 +5,6 @@ Play steps off the grid, early or late:
 * **Record off the grid.** The trigger keys and MIDI notes record your hits where you played them, on the nearest step, early or late.
 * **Edit off the grid.** Hold a step and turn **TEMPO** to move it early or late, in sixths of a step.
 
-Off-grid replaces **UNQUANTIZED** (seq-unquantized), and its recording is based on that mod. It uses the same config key, and keeps UNQUANTIZED's setting.
-
 > **Tested on hardware.** Recording and TEMPO editing passed the hardware test plan on a Pērkons. See [TESTING.md](TESTING.md). If it misbehaves, flash the official firmware to go back.
 
 Based on official Pērkons firmware **1.3.0**. Unofficial, and not affiliated with Erica Synths.
@@ -15,14 +13,12 @@ Based on official Pērkons firmware **1.3.0**. Unofficial, and not affiliated wi
 
 Build Pērkons firmware with **OFF-GRID** ticked in the **Mod Matrix**, from your own official 1.3.0 firmware. Follow [Get modded firmware](https://github.com/kiteless/perkons-re#get-modded-firmware) in perkons-re. No firmware files are provided here. To remove it, flash the official firmware again.
 
-Off-grid can't be built together with **UNQUANTIZED**: tick one or the other.
-
 ## Turning it on
 
 The two halves are switched on separately, so you can have either or both.
 
 1. Hold **SHIFT** and press **MOD** to open the config menu.
-2. Press **step 13 on the third row** for off-grid recording. LED on means recording goes off the grid. LED off (the default) means recording snaps to the grid, as on the factory firmware. If you used UNQUANTIZED, this key and its setting carry over.
+2. Press **step 13 on the third row** for off-grid recording. LED on means recording goes off the grid. LED off (the default) means recording snaps to the grid, as on the factory firmware.
 3. Press **step 12 on the third row** for TEMPO editing. LED on means hold a step + TEMPO moves the step. LED off (the default) means TEMPO is always the tempo knob.
 4. Leave the config menu as usual. The settings are saved on the SD card.
 
@@ -75,10 +71,3 @@ The timing is kept in the step's own delay value, the one **SHUFFLE** sets. The 
 * the official firmware plays it back the same way.
 
 Setting a track's **SHUFFLE** again replaces that track's timing.
-
-## Coming from UNQUANTIZED
-
-* The config key (row 3, step 13) and its saved setting are the same.
-* Patterns recorded with UNQUANTIZED play as before.
-* New recordings differ in one way: a hit in the second half of a step now goes on the next step, early, instead of on this step, late. It plays at the same moment either way.
-* In the Mod Matrix, tick **OFF-GRID** instead of UNQUANTIZED. The build tag in `INFO.TXT` shows `og` instead of `uq`.

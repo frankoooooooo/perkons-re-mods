@@ -12,13 +12,13 @@ SUMMARY = 'Off-grid: record hits as played, and move steps early/late with TEMPO
 MOD = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(MOD, 'src', 'm4')
 KEY_EDIT = 43               # config row 3 step 12
-KEY_RECORD = 44             # config row 3 step 13 (seq-unquantized's, and its setting)
+KEY_RECORD = 44             # config row 3 step 13
 
 
 def apply(p, arg=None):
     h = m4host.host(p)
     h.add([os.path.join(SRC, 'record.c'), os.path.join(SRC, 'tempo_edit.c')], [SRC])
-    h.toggle(KEY_RECORD, 'unquantized', 'pk_cfg_unquantized')
+    h.toggle(KEY_RECORD, 'off-grid', 'pk_cfg_off_grid')
     h.toggle(KEY_EDIT, 'microtiming', 'pk_cfg_microtiming')
     h.replace_word('keys.handler_lit', 'pk_og_rec_key_event', 'key events: which trigger key is handled')
     h.redirect_call('og.playing.081039ec', 'pk_og_playing', 'trigger key while recording: the delay as played')

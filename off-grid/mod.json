@@ -24,9 +24,6 @@
           "page": "MAIN",
           "does": "HOLD A STEP, TURN TEMPO: PLAYS THE STEP EARLY OR LATE"
         }
-      ],
-      "conflicts": [
-        "kiteless/perkons-re-mods:seq-unquantized"
       ]
     }
   ]

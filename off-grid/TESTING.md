@@ -38,16 +38,14 @@ Turn off-grid recording on (config row 3 step 13). Use a slow tempo (60–80 BPM
 | # | Test | Do | Expect | Result |
 |---|---|---|---|---|
 | R1 | Toggle, saved | Press row 3 step 13, power cycle | The LED is still lit | pass |
-| R2 | Carry-over | On a card where UNQUANTIZED was on, flash off-grid | Row 3 step 13 is already lit | pass |
-| R3 | Late hit | REC, play track 1's trigger key a little after a beat | Plays back a little after that beat, every time round. The step it lands on is the beat's step | pass |
-| R4 | Early hit | REC, play a little before a beat | Plays back a little before that beat. It lands on the beat's step, not the one before | pass |
-| R5 | No double | Watch R3 and R4 on the pass you record | You hear your hit once, not again from the sequencer on that pass | pass |
-| R6 | Last to first | Play just before the bar line | Lands on step 1, early, and plays just before the bar line | pass |
-| R7 | View | Hold a recorded early step and nudge TEMPO (TEMPO editing on) | The bright LED is to the left of the step | pass |
-| R8 | MIDI | Record from MIDI notes, early and late, single and multi channel | As R3 and R4. Velocity kept with MIDI velocity on, notes kept in multi channel | pass |
-| R9 | Off is stock | Recording toggle off, record early and late | Hits snap to the nearest step, on the grid | pass |
-| R10 | Old recordings | Load a pattern recorded with UNQUANTIZED | Plays as before | pass |
-| R11 | Overdub next to off-grid steps | Record early hits, then on the next passes record more hits just before and after them, and next to steps moved with TEMPO | Every hit plays where you played it. No hit lands a step late or goes missing, and steps you didn't record stay empty | pass |
+| R2 | Late hit | REC, play track 1's trigger key a little after a beat | Plays back a little after that beat, every time round. The step it lands on is the beat's step | pass |
+| R3 | Early hit | REC, play a little before a beat | Plays back a little before that beat. It lands on the beat's step, not the one before | pass |
+| R4 | No double | Watch R2 and R3 on the pass you record | You hear your hit once, not again from the sequencer on that pass | pass |
+| R5 | Last to first | Play just before the bar line | Lands on step 1, early, and plays just before the bar line | pass |
+| R6 | View | Hold a recorded early step and nudge TEMPO (TEMPO editing on) | The bright LED is to the left of the step | pass |
+| R7 | MIDI | Record from MIDI notes, early and late, single and multi channel | As R2 and R3. Velocity kept with MIDI velocity on, notes kept in multi channel | pass |
+| R8 | Off is stock | Recording toggle off, record early and late | Hits snap to the nearest step, on the grid | pass |
+| R9 | Overdub next to off-grid steps | Record early hits, then on the next passes record more hits just before and after them, and next to steps moved with TEMPO | Every hit plays where you played it. No hit lands a step late or goes missing, and steps you didn't record stay empty | pass |
 
 ## Worst cases
 
@@ -65,7 +63,7 @@ Turn off-grid recording on (config row 3 step 13). Use a slow tempo (60–80 BPM
 | 23 | Fast and slow tempo | Repeat test 6 at the lowest and highest tempo | No hits drop out | pass |
 | 24 | Pattern switch | Queue a pattern whose step 1 is shifted early while another plays | No missing or extra hit at the switch | pass |
 | 25 | External clock and MIDI | Run from MIDI clock, and from analog clock at 1 PPQN. With MIDI SEQ OUT on, watch the notes | Shifts sound the same. MIDI notes shift with the audio | pass |
-| 26 | Other mods | Rebuild with your usual mods ticked too and repeat tests 3 to 9, and R3 | All pass | pass |
+| 26 | Other mods | Rebuild with your usual mods ticked too and repeat tests 3 to 9, and R2 | All pass | pass |
 | 27 | Official firmware | Flash the official image and load the same pattern | Shifted steps play the same way | pass |
 | 28 | Recording and editing | Record a hit, then hold its step and move it with TEMPO | It moves from where it was recorded (rounded to a sixth) | pass |
 | 29 | Recording at fast tempo | Record early and late hits at the highest tempo | No doubled or missing hits | pass |
